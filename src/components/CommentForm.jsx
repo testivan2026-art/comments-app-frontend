@@ -4,7 +4,7 @@ import { handleApi } from '../api/handleApi'
 
 export default function CommentForm({ parentId = null, onSuccess }) {
   const [form, setForm] = useState({
-    userName: '',
+    username: '',
     email: '',
     text: '',
   })
@@ -16,21 +16,22 @@ export default function CommentForm({ parentId = null, onSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // Відправляємо правильні ключі для бекенду
     await handleApi(
-      createComment({ ...form, parentId }),
+      createComment({ ...form, parent_id: parentId, captcha: 'test' }),
       'Sending comment...'
     )
 
-    setForm({ userName: '', email: '', text: '' })
+    setForm({ username: '', email: '', text: '' })
     onSuccess?.()
   }
 
   return (
     <form onSubmit={handleSubmit} className="comment-form">
       <input
-        name="userName"
+        name="username"
         placeholder="Your name"
-        value={form.userName}
+        value={form.username}
         onChange={handleChange}
         required
       />

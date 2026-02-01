@@ -3,7 +3,7 @@ const API_URL = import.meta.env.VITE_API_URL
 export async function apiRequest(endpoint, options = {}) {
   const response = await fetch(`${API_URL}${endpoint}`, {
     headers: { 'Content-Type': 'application/json' },
-    ...options,
+    ...options
   })
 
   const data = await response.json()
@@ -15,6 +15,7 @@ export async function apiRequest(endpoint, options = {}) {
   return data
 }
 
+// Додаємо експорт getComments
 export function getComments(page = 1) {
   return apiRequest(`/comments?page=${page}`)
 }
@@ -22,6 +23,6 @@ export function getComments(page = 1) {
 export function createComment(data) {
   return apiRequest('/comments', {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify(data)
   })
 }

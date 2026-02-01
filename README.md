@@ -1,16 +1,131 @@
-# React + Vite
+# 💬 Comments App Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+SPA додаток на **React + Vite** для взаємодії з Comments App API.  
+Підтримує створення ниткоподібних коментарів, прикріплення файлів, пагінацію та CAPTCHA.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Tech Stack
 
-## React Compiler
+- **React 18**
+- **Vite** (швидкий dev server + HMR)
+- **React Router (опціонально)**
+- **Axios / fetch** для запитів до API
+- **Zod** для валідації форм
+- **Tailwind CSS** (або будь-який інший UI фреймворк за бажанням)
+- **Docker / Docker Compose** (опціонально)
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+---
 
-## Expanding the ESLint configuration
+## 📂 Project Structure
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+public/
+src/
+├─ api/
+│ ├─ commentsApi.js
+│ └─ handleApi.js
+├─ components/
+│ ├─ CommentForm.jsx
+│ ├─ CommentList.jsx
+│ └─ CommentItem.jsx
+├─ pages/
+│ └─ Home.jsx
+├─ App.jsx
+├─ main.jsx
+├─ index.css
+└─ ...
+package.json
+vite.config.js
+.env
+README.md
+
+---
+
+## ⚙ Environment Variables
+
+Створіть файл `.env` у корені проекту:
+VITE_API_URL=http://localhost:3000
+
+
+> Вказує на URL вашого бекенд API.
+
+---
+
+## 🏃‍♂️ Run Project
+
+### 🐳 With Docker (optional)
+```bash
+# 1. Build frontend Docker image
+docker build -t comments-frontend .
+
+# 2. Run container (port 3001)
+docker run -it -p 3001:3000 comments-frontend
+
+Without Docker
+# 1. Install dependencies
+npm install
+
+
+# 2. Start dev server
+npm run dev
+
+
+# 3. Open in browser
+http://localhost:3001
+
+
+Features
+
+Створення коментарів із валідацією
+
+Підтримка reply (threaded comments)
+
+Пагінація та сортування коментарів
+
+Завантаження файлів (файли надсилаються на бекенд)
+
+CAPTCHA перевірка (серверна заглушка)
+
+XSS захист через серверну санітизацію
+
+React HMR через Vite для швидкого девелопменту
+
+
+Example Usage
+
+CommentForm:
+
+<CommentForm
+  parentId={null}
+  onSuccess={() => console.log('Comment created!')}
+/>
+
+Fetching Comments:
+
+import { getComments } from '../api/commentsApi'
+
+
+const { comments, totalPages } = await getComments(1)
+
+
+Notes
+
+API повинен бути запущений на http://localhost:3000.
+
+У .env можна змінити URL бекенду (VITE_API_URL).
+
+Для швидкого тестування використовуйте Swagger UI бекенду: http://localhost:3000/api-docs
+
+Коментарі з reply підтягуються автоматично у компоненті CommentList.
+
+
+Recommended Workflow
+
+Створюйте нову гілку для фічі або виправлення.
+
+Коміт і пуш змін до GitHub.
+
+Після перевірки зливайте у main або develop.
+
+Використовуйте Docker для локального тестування разом із бекендом.
