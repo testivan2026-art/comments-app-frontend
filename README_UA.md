@@ -7,7 +7,7 @@ SPA додаток на **React + Vite** для взаємодії з Comments A
 
 ## 🚀 Tech Stack
 
-- **React 18**
+- **React 19**
 - **Vite** (швидкий dev server + HMR)
 - **React Router (опціонально)**
 - **Axios / fetch** для запитів до API

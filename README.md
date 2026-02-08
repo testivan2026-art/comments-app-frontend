@@ -5,7 +5,7 @@ SPA додаток на React + Vite для взаємодії з Comments App A
 
 🚀 Tech Stack
 
-React 18
+React 19
 
 Vite (fast dev server + HMR)
 
