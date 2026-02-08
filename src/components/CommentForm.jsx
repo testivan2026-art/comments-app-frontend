@@ -1,56 +1,55 @@
 import { useState } from 'react'
 import { createComment } from '../api/commentsApi'
-import { handleApi } from '../api/handleApi'
 
-export default function CommentForm({ parentId = null, onSuccess }) {
+export default function CommentForm({ parentId, onSuccess, compact = false }) {
   const [form, setForm] = useState({
     username: '',
     email: '',
     text: '',
+    file: null
   })
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Відправляємо правильні ключі для бекенду
-    await handleApi(
-      createComment({ ...form, parent_id: parentId, captcha: 'test' }),
-      'Sending comment...'
-    )
+    const fd = new FormData()
+    fd.append('username', form.username)
+    fd.append('email', form.email)
+    fd.append('text', form.text)
+    if (parentId) fd.append('parent_id', parentId)
+    if (form.file) fd.append('file', form.file)
 
-    setForm({ username: '', email: '', text: '' })
+    await createComment(fd)
+
+    setForm({ username: '', email: '', text: '', file: null })
     onSuccess?.()
   }
 
   return (
-    <form onSubmit={handleSubmit} className="comment-form">
+    <form className={compact ? 'comment-form compact' : 'comment-form'} onSubmit={handleSubmit}>
+      {!compact && <h2>Add comment</h2>}
+
       <input
-        name="username"
-        placeholder="Your name"
+        placeholder="Username"
         value={form.username}
-        onChange={handleChange}
-        required
+        onChange={(e) => setForm({ ...form, username: e.target.value })}
       />
 
       <input
-        name="email"
-        type="email"
         placeholder="Email"
         value={form.email}
-        onChange={handleChange}
-        required
+        onChange={(e) => setForm({ ...form, email: e.target.value })}
       />
 
       <textarea
-        name="text"
-        placeholder="Comment text"
+        placeholder="Text"
         value={form.text}
-        onChange={handleChange}
-        required
+        onChange={(e) => setForm({ ...form, text: e.target.value })}
+      />
+
+      <input
+        type="file"
+        onChange={(e) => setForm({ ...form, file: e.target.files[0] })}
       />
 
       <button type="submit">Send</button>

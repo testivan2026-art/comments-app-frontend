@@ -1,25 +1,25 @@
-# 💬 Comments App Frontend
+Comments App Frontend
 
-SPA додаток на **React + Vite** для взаємодії з Comments App API.  
+SPA додаток на React + Vite для взаємодії з Comments App API.
 Підтримує створення ниткоподібних коментарів, прикріплення файлів, пагінацію та CAPTCHA.
 
----
+🚀 Tech Stack
 
-## 🚀 Tech Stack
+React 18
 
-- **React 18**
-- **Vite** (швидкий dev server + HMR)
-- **React Router (опціонально)**
-- **Axios / fetch** для запитів до API
-- **Zod** для валідації форм
-- **Tailwind CSS** (або будь-який інший UI фреймворк за бажанням)
-- **Docker / Docker Compose** (опціонально)
+Vite (fast dev server + HMR)
 
----
+React Router (optional)
 
-## 📂 Project Structure
+Axios / fetch for API requests
 
+Zod for form validation (optional)
 
+Tailwind CSS or any UI framework
+
+Docker / Docker Compose (optional)
+
+📂 Project Structure
 public/
 src/
 ├─ api/
@@ -31,101 +31,90 @@ src/
 │ └─ CommentItem.jsx
 ├─ pages/
 │ └─ Home.jsx
+├─ styles/
+│ └─ index.css
 ├─ App.jsx
 ├─ main.jsx
-├─ index.css
 └─ ...
 package.json
 vite.config.js
 .env
+.env.production
 README.md
 
----
+⚙ Environment Variables
 
-## ⚙ Environment Variables
+Create a .env file in the project root:
 
-Створіть файл `.env` у корені проекту:
 VITE_API_URL=http://localhost:3000
 
+Points to your backend API URL.
 
-> Вказує на URL вашого бекенд API.
-
----
-
-## 🏃‍♂️ Run Project
-
-### 🐳 With Docker (optional)
-```bash
-# 1. Build frontend Docker image
+🏃‍♂️ Run Project
+🐳 With Docker (optional)
+# Build frontend image
 docker build -t comments-frontend .
 
-# 2. Run container (port 3001)
-docker run -it -p 3001:3000 comments-frontend
 
-Without Docker
-# 1. Install dependencies
+# Run container (port 3001)
+docker run -it -p 3001:3000 comments-frontend
+💻 Without Docker
+# Install dependencies
 npm install
 
 
-# 2. Start dev server
+# Start dev server
 npm run dev
 
 
-# 3. Open in browser
+# Open in browser
 http://localhost:3001
+✨ Features
 
+Create comments with validation
 
-Features
+Threaded replies (nested comments)
 
-Створення коментарів із валідацією
+Pagination and sorting
 
-Підтримка reply (threaded comments)
+File uploads (sent to backend)
 
-Пагінація та сортування коментарів
+CAPTCHA support (server-side mock)
 
-Завантаження файлів (файли надсилаються на бекенд)
+XSS protection via backend sanitization
 
-CAPTCHA перевірка (серверна заглушка)
+Fast HMR via Vite
 
-XSS захист через серверну санітизацію
-
-React HMR через Vite для швидкого девелопменту
-
-
-Example Usage
-
-CommentForm:
-
+🧩 Example Usage
+CommentForm
 <CommentForm
   parentId={null}
   onSuccess={() => console.log('Comment created!')}
 />
 
-Fetching Comments:
 
+Fetching Comments
 import { getComments } from '../api/commentsApi'
-
 
 const { comments, totalPages } = await getComments(1)
 
 
-Notes
+📝 Notes
 
-API повинен бути запущений на http://localhost:3000.
+Backend API must run on: http://localhost:3000
 
-У .env можна змінити URL бекенду (VITE_API_URL).
+API URL can be changed via .env
 
-Для швидкого тестування використовуйте Swagger UI бекенду: http://localhost:3000/api-docs
+Swagger UI for testing: http://localhost:3000/api-docs
 
-Коментарі з reply підтягуються автоматично у компоненті CommentList.
+Reply comments are rendered automatically in CommentList
 
+🛠 Recommended Workflow
 
-Recommended Workflow
+Create a new branch for each feature or fix
 
-Створюйте нову гілку для фічі або виправлення.
+Commit and push changes to GitHub
 
-Коміт і пуш змін до GitHub.
+Merge into main or develop after review
 
-Після перевірки зливайте у main або develop.
-
-Використовуйте Docker для локального тестування разом із бекендом.
+Use Docker to test frontend + backend together
