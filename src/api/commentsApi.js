@@ -1,28 +1,24 @@
 const API_URL = import.meta.env.VITE_API_URL
 
-export async function apiRequest(endpoint, options = {}) {
-  const response = await fetch(`${API_URL}${endpoint}`, {
-    headers: { 'Content-Type': 'application/json' },
-    ...options
+export async function getComments(page = 1, sort = {}) {
+  const params = new URLSearchParams({
+    page,
+    limit: 25,
+    sortField: sort.field || 'created_at',
+    sortOrder: sort.order || 'DESC'
   })
 
-  const data = await response.json()
-
-  if (!response.ok) {
-    throw { status: response.status, message: data.message }
-  }
-
-  return data
+  const res = await fetch(`${API_URL}/comments?${params}`)
+  if (!res.ok) throw new Error('Failed to fetch comments')
+  return res.json()
 }
 
-// Додаємо експорт getComments
-export function getComments(page = 1) {
-  return apiRequest(`/comments?page=${page}`)
-}
-
-export function createComment(data) {
-  return apiRequest('/comments', {
+export async function createComment(formData) {
+  const res = await fetch(`${API_URL}/comments/with-file`, {
     method: 'POST',
-    body: JSON.stringify(data)
+    body: formData
   })
+
+  if (!res.ok) throw new Error('Failed to create comment')
+  return res.json()
 }

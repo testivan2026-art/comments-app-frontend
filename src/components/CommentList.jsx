@@ -1,15 +1,15 @@
-export default function CommentList({ comments }) {
-  if (!comments || comments.length === 0) {
-    return <div>No comments</div>
-  }
+import CommentItem from './CommentItem'
 
+export default function CommentList({ comments, onReplySuccess }) {
   return (
-    <ul>
-      {comments.map(comment => (
-        <li key={comment.id}>
-          <strong>{comment.User?.username}</strong>: {comment.text}
-        </li>
+    <div>
+      {comments.map(c => (
+        <CommentItem
+          key={c.id}
+          comment={c}
+          onReplySuccess={onReplySuccess}
+        />
       ))}
-    </ul>
+    </div>
   )
 }
