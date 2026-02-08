@@ -1,6 +1,6 @@
 # 💬 Comments App Frontend
 
-SPA додаток на **React + Vite** для взаємодії з Comments App API.  
+SPA додаток на **React 19 + Vite** для взаємодії з Comments App API.  
 Підтримує створення ниткоподібних коментарів, прикріплення файлів, пагінацію та CAPTCHA.
 
 ---
@@ -11,14 +11,13 @@ SPA додаток на **React + Vite** для взаємодії з Comments A
 - **Vite** (швидкий dev server + HMR)
 - **React Router (опціонально)**
 - **Axios / fetch** для запитів до API
-- **Zod** для валідації форм
-- **Tailwind CSS** (або будь-який інший UI фреймворк за бажанням)
+- **Zod** для валідації форм (опціонально)
+- **Tailwind CSS** (або будь-який інший UI фреймворк)
 - **Docker / Docker Compose** (опціонально)
 
 ---
 
-## 📂 Project Structure
-
+## 📂 Структура Проекту
 
 public/
 src/
@@ -40,50 +39,41 @@ package.json
 vite.config.js
 .env
 .env.production
-README.md
+README_UA.md
+
 
 ---
 
-## ⚙ Environment Variables
+## ⚙ Змінні оточення
 
 Створіть файл `.env` у корені проекту:
-VITE_API_URL=http://localhost:3000
 
-
-> Вказує на URL вашого бекенд API.
-
----
-
-## 🏃‍♂️ Run Project
-
-### 🐳 With Docker (optional)
 ```bash
+VITE_API_URL=https://comments-app-api.onrender.com
+Вказує на URL вашого бекенд API. Можна використовувати локальний сервер (http://localhost:3000) або деплой на Render.
+
+🏃‍♂️ Запуск Проекту
+🐳 З Docker (опціонально)
 # 1. Build frontend Docker image
 docker build -t comments-frontend .
 
 # 2. Run container (port 3001)
 docker run -it -p 3001:3000 comments-frontend
-
-Without Docker
-# 1. Install dependencies
+💻 Без Docker
+# 1. Встановити залежності
 npm install
 
-
-# 2. Start dev server
+# 2. Запустити dev сервер
 npm run dev
 
-
-# 3. Open in browser
+# 3. Відкрити в браузері
 http://localhost:3001
-
-
-Features
-
+✨ Фічі
 Створення коментарів із валідацією
 
 Підтримка reply (threaded comments)
 
-Пагінація та сортування коментарів
+Пагінація та сортування
 
 Завантаження файлів (файли надсилаються на бекенд)
 
@@ -91,43 +81,37 @@ CAPTCHA перевірка (серверна заглушка)
 
 XSS захист через серверну санітизацію
 
-React HMR через Vite для швидкого девелопменту
+Швидкий HMR через Vite
 
+Автоматичний рендер reply коментарів у CommentList
 
-Example Usage
-
+🧩 Приклад Використання
 CommentForm:
 
 <CommentForm
   parentId={null}
   onSuccess={() => console.log('Comment created!')}
 />
-
-Fetching Comments:
+Отримання коментарів:
 
 import { getComments } from '../api/commentsApi'
 
-
 const { comments, totalPages } = await getComments(1)
+📝 Примітки
+Бекенд API може працювати локально (http://localhost:3000) або на Render (https://comments-app-api.onrender.com)
 
+URL API можна змінити через .env
 
-Notes
+Swagger UI для тестування: https://comments-app-api.onrender.com/api-docs
 
-API повинен бути запущений на http://localhost:3000.
+Reply коментарі підтягуються автоматично у компоненті CommentList
 
-У .env можна змінити URL бекенду (VITE_API_URL).
+🛠 Рекомендований Workflow
+Створюйте нову гілку для кожної фічі або виправлення
 
-Для швидкого тестування використовуйте Swagger UI бекенду: http://localhost:3000/api-docs
+Коміт і пуш змін до GitHub
 
-Коментарі з reply підтягуються автоматично у компоненті CommentList.
+Зливайте у main або develop після перевірки
 
+Використовуйте Docker для тестування фронтенду разом із бекендом
 
-Recommended Workflow
-
-Створюйте нову гілку для фічі або виправлення.
-
-Коміт і пуш змін до GitHub.
-
-Після перевірки зливайте у main або develop.
-
-Використовуйте Docker для локального тестування разом із бекендом.
