@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import CommentForm from './CommentForm'
 
+const API_URL = import.meta.env.VITE_API_URL
+
 export default function CommentItem({ comment, onReplySuccess }) {
   const [showReply, setShowReply] = useState(false)
 
@@ -14,7 +16,7 @@ export default function CommentItem({ comment, onReplySuccess }) {
 
       {comment.Files?.[0] && comment.Files[0].type === 'image' && (
         <img
-          src={`http://localhost:3000/${comment.Files[0].path}`}
+          src={`${API_URL}/${comment.Files[0].path}`}
           width="200"
         />
       )}

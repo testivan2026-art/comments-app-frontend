@@ -1,33 +1,42 @@
-import { useState } from 'react'
-import { createComment } from '../api/commentsApi'
+import { useState } from "react";
+import { createComment } from "../api/commentsApi";
 
 export default function CommentForm({ parentId, onSuccess, compact = false }) {
   const [form, setForm] = useState({
-    username: '',
-    email: '',
-    text: '',
-    file: null
-  })
+    username: "",
+    email: "",
+    text: "",
+    file: null,
+    captcha: "",
+  });
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const fd = new FormData()
-    fd.append('username', form.username)
-    fd.append('email', form.email)
-    fd.append('text', form.text)
-    if (parentId) fd.append('parent_id', parentId)
-    if (form.file) fd.append('file', form.file)
+    const fd = new FormData();
+    fd.append("username", form.username);
+    fd.append("email", form.email);
+    fd.append("text", form.text);
+    fd.append("captcha", form.captcha);
 
-    await createComment(fd)
+    if (parentId) fd.append("parent_id", parentId);
+    if (form.file) fd.append("file", form.file);
 
-    setForm({ username: '', email: '', text: '', file: null })
-    onSuccess?.()
-  }
+    try {
+      await createComment(fd);
+      setForm({ username: "", email: "", text: "", file: null, captcha: "" });
+      onSuccess?.();
+    } catch (err) {
+      alert(err.message || "Failed to create comment");
+    }
+  };
 
   return (
-    <form className={compact ? 'comment-form compact' : 'comment-form'} onSubmit={handleSubmit}>
-      {!compact && <h2>Add comment</h2>}
+    <form
+      className={compact ? "comment-form compact" : "comment-form"}
+      onSubmit={handleSubmit}
+    >
+     
 
       <input
         placeholder="Username"
@@ -52,7 +61,14 @@ export default function CommentForm({ parentId, onSuccess, compact = false }) {
         onChange={(e) => setForm({ ...form, file: e.target.files[0] })}
       />
 
+      <input
+        name="captcha"
+        placeholder="CAPTCHA 1234"
+        value={form.captcha}
+        onChange={(e) => setForm({ ...form, captcha: e.target.value })}
+      />
+
       <button type="submit">Send</button>
     </form>
-  )
+  );
 }
