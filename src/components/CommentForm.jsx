@@ -1,74 +1,108 @@
-import { useState } from "react";
-import { createComment } from "../api/commentsApi";
+import { useState, useEffect } from "react";
+import { getCaptcha, createComment } from "../api/commentsApi";
+import { handleApi } from "../api/handleApi";
 
-export default function CommentForm({ parentId, onSuccess, compact = false }) {
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    text: "",
-    file: null,
-    captcha: "",
-  });
+export default function CommentForm({
+  parentId = null,
+  compact = false,
+  onSuccess,
+}) {
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [text, setText] = useState("");
+  const [file, setFile] = useState(null);
+  const [captcha, setCaptcha] = useState("");
+  const [captchaSvg, setCaptchaSvg] = useState("");
+
+  const loadCaptcha = async () => {
+    try {
+      const svg = await getCaptcha();
+      setCaptchaSvg(svg);
+    } catch (error) {
+      console.error("Captcha load error:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCaptcha = async () => {
+      try {
+        const svg = await getCaptcha();
+        setCaptchaSvg(svg);
+      } catch (err) {
+        console.error("Failed to load captcha", err);
+      }
+    };
+
+    fetchCaptcha();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const fd = new FormData();
-    fd.append("username", form.username);
-    fd.append("email", form.email);
-    fd.append("text", form.text);
-    fd.append("captcha", form.captcha);
-
-    if (parentId) fd.append("parent_id", parentId);
-    if (form.file) fd.append("file", form.file);
+    const formData = new FormData();
+    formData.append("username", username);
+    formData.append("email", email);
+    formData.append("text", text);
+    formData.append("captcha", captcha);
+    if (parentId) formData.append("parent_id", parentId);
+    if (file) formData.append("file", file);
 
     try {
-      await createComment(fd);
-      setForm({ username: "", email: "", text: "", file: null, captcha: "" });
-      onSuccess?.();
+      await handleApi(createComment(formData), "Creating comment...");
+      setUsername("");
+      setEmail("");
+      setText("");
+      setCaptcha("");
+      setFile(null);
+      loadCaptcha(); // оновлення captcha після submit
+      if (onSuccess) onSuccess();
     } catch (err) {
-      alert(err.message || "Failed to create comment");
+      console.error(err); 
+      loadCaptcha();// оновлення captcha при помилці
     }
   };
 
   return (
-    <form
-      className={compact ? "comment-form compact" : "comment-form"}
-      onSubmit={handleSubmit}
-    >
-     
-
+    <form onSubmit={handleSubmit} className={compact ? "compact-form" : ""}>
       <input
+        type="text"
         placeholder="Username"
-        value={form.username}
-        onChange={(e) => setForm({ ...form, username: e.target.value })}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        required
       />
-
       <input
+        type="email"
         placeholder="Email"
-        value={form.email}
-        onChange={(e) => setForm({ ...form, email: e.target.value })}
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
       />
-
       <textarea
-        placeholder="Text"
-        value={form.text}
-        onChange={(e) => setForm({ ...form, text: e.target.value })}
+        placeholder="Comment"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        required
       />
-
-      <input
-        type="file"
-        onChange={(e) => setForm({ ...form, file: e.target.files[0] })}
-      />
-
-      <input
-        name="captcha"
-        placeholder="CAPTCHA 1234"
-        value={form.captcha}
-        onChange={(e) => setForm({ ...form, captcha: e.target.value })}
-      />
-
-      <button type="submit">Send</button>
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+      <div className="captcha-container">
+        {captchaSvg && (
+          <img
+            src={`data:image/svg+xml;utf8,${encodeURIComponent(captchaSvg)}`}
+            alt="captcha"
+          />
+        )}
+        <input
+          type="text"
+          placeholder="Enter captcha"
+          value={captcha}
+          onChange={(e) => setCaptcha(e.target.value)}
+          required
+        />
+        <button type="button" onClick={loadCaptcha}>
+          Refresh
+        </button>
+      </div>
+      <button type="submit">Submit</button>
     </form>
   );
 }
